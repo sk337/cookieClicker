@@ -1,0 +1,23 @@
+{
+  "name": "cookie-clicker",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "bun ./build.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react-dom": "^18.3.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwindcss": "^3.4.13",
+    "tailwindcss-scoped-preflight": "^3.4.4"
+  }
+}
