@@ -30,7 +30,7 @@ export default function Page() {
       <div className={`flex flex-col ${(isVisable && "w-96")} border-gray-700 border-[1px] border-solid max-h-60`}>
         <div className="w-full bg-primary border-gray-700 border-b-[1px] border-solid flex flex-row gap-2 p-0.5 ps-2 items-center">
           <button
-            className="rounded-full hover:bg-light h-5 w-5 flex items-center justify-center"
+            className="rounded-full focus:outline-none hover:bg-light h-5 w-5 flex items-center justify-center"
             onClick={() => {
               setUI(!isVisable);
             }}
@@ -141,33 +141,33 @@ export default function Page() {
                         // buy the most highest teir building that is affordable
                         let buyType: "upgrade" | "object" = "object";
                         let max = 0;
-                        let maxKey = "";
+                        let maxKey: Game.Upgrade | Game.Object | null = null;
 
                         for (const [key, value] of recordToTupleArray(Game.Objects)) {
                           if (value.price <= Game.cookies) {
                             if (value.basePrice > max) {
                               buyType = "object";
                               max = value.basePrice;
-                              maxKey = key;
+                              maxKey = value;
                             }
                           }
                         }
-                        // for (const [key, value] of recordToTupleArray(Game.Upgrades)) {
-                        //   if (!value.bought && value.getPrice() <= Game.cookies) {
-                        //     if (value.getPrice() > max) {
-                        //       buyType = "upgrade";
-                        //       max = value.getPrice();
-                        //       maxKey = key;
-                        //     }
-                        //   }
-                        // }
-                        if (max === 0) {
+                        for (const value of Game.UpgradesInStore) {
+                          if (!value.bought && value.getPrice() <= Game.cookies) {
+                            if (value.getPrice() > max) {
+                              buyType = "upgrade";
+                              max = value.getPrice();
+                              maxKey = value;
+                            }
+                          }
+                        }
+                        if (maxKey === null) {
                           return;
                         }
                         if (buyType === "object") {
-                          Game.Objects[maxKey].buy();
+                          maxKey.buy(1);
                         } else {
-                          Game.Upgrades[maxKey].buy(true);
+                          maxKey.buy(1);
                         }
 
                       }, 100)
@@ -221,8 +221,8 @@ export default function Page() {
             <button className="bg-primary hover:bg-light transition-colors duration-200 text-white px-1 py-0.5 rounded-none" onClick={() => {
               if (clicker) clearInterval(clicker);
               if (autoBuy) clearInterval(autoBuy);
-              document.querySelector("#self.script")?.remove();
-              document.querySelector("#self.styles")?.remove();
+              document.querySelectorAll("#self\\.script")?.forEach((element) => element.remove());
+              document.querySelectorAll("#self\\.styles")?.forEach((element) => element.remove());
               document.querySelector("#root")?.remove();
               const script = document.createElement("script");
               script.src = `./index.js?${Math.random()}`;
