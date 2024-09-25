@@ -2,9 +2,29 @@ import autoprefixer from "autoprefixer";
 import postcss from "postcss";
 import * as fs from "fs";
 import { build } from "bun";
-import postCssPlugin from "./postCssPlugin";
+import { BunPlugin, type OnLoadResult } from "bun";
+import tailwind from "tailwindcss"
 
-fs.rmdirSync("dist", {recursive: true });
+let postCssPlugin: BunPlugin = {
+    name: "PostCss",
+    setup: async function (build) {
+        // @ts-expect-error it works :shrug:
+        build.onLoad({ filter: /\.(css)$/ }, async (args) => {
+            const text = await Bun.file(args.path).text();
+
+            let result = await postcss([autoprefixer, tailwind]).process(text, { from: args.path })
+
+            const v = {
+                contents: result.css, loader: "text"
+            }
+            return v;
+
+        })
+    }
+};
+
+
+fs.rmdirSync("dist", { recursive: true });
 fs.mkdirSync("dist")
 
 build({
@@ -14,13 +34,3 @@ build({
     plugins: [postCssPlugin]
 })
 
-// fs.readFile('src/app.css', (err, css) => {
-//     postcss([autoprefixer])
-//         .process(css, { from: 'src/app.css', to: 'dest/app.css' })
-//         .then(result => {
-//             fs.writeFile('dest/app.css', result.css, () => true)
-//             if (result.map) {
-//                 fs.writeFile('dest/app.css.map', result.map.toString(), () => true)
-//             }
-//         })
-// })
