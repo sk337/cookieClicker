@@ -19,7 +19,10 @@ function LabelPair({
 export default function Page() {
   const [isVisable, setUI] = useState(true);
   const [clicker, setClicker] = useState<Timer | false>(false);
-
+  const [checked, setChecked] = useState(false);
+  function toggleCheck() {
+    setChecked(!checked);
+  }
   return (
     <div className="flex flex-row-reverse absolute top-24 right-24 z-[999]">
       <div className="flex flex-col w-72 border-gray-700 border-[1px] border-solid max-h-60">
@@ -60,24 +63,32 @@ export default function Page() {
             className="h-full p-2"
             style={{ backgroundColor: "rgba(0,0,0,0.75)" }}
           >
-            <LabelPair label="Auto Clicker">
+            <label className="flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                onChange={() => {
-                  if (clicker) {
-                    clearInterval(clicker);
-                    setClicker(false);
-                  } else {
-                    const timer = setInterval(() => {
-                      // try to make a better way to click the cookie that will trigger the click event
-                      document.getElementById("bigCookie")?.click();
-                    }, 100);
-                    setClicker(timer);
-                  }
-                }}
-                value={clicker ? true : false}
+                className="hidden"
+                checked={checked}
+                onChange={() => {}}
               />
-            </LabelPair>
+              <div
+                className={`w-4 h-4 border-2 border-gray-300 rounded-sm flex items-center justify-center
+          ${checked ? "bg-primary text-white" : "bg-primary"}
+          hover:bg-light transition-colors duration-200`}
+              >
+                {checked && (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    className="w-3 h-3"
+                    scale={4}
+                  >
+                    <path d="M5 12l5 5L20 7" strokeWidth="4" />
+                  </svg>
+                )}
+              </div>
+            </label>
           </div>
         )}
       </div>
