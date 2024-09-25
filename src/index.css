@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'ProggyClean';
+  src: url("https://raw.githubusercontent.com/bluescan/proggyfonts/refs/heads/master/ProggyOriginal/ProggyClean.ttf");
+}
+
+#root {
+  font-family: 'ProggyClean', monospace;
+  font-size: 16px;
+}
+
+:root {
+  --color-primary: #294A7A;
+  --color-light: #3D85E0;
+  --color-dim: #20324D;
+  --color-dark: #1E3044;
+}
