@@ -1,4 +1,3 @@
-import { $ } from "bun";
 import React, { useState } from "react";
 
 function clickCookie() {
@@ -16,13 +15,18 @@ function removeDuplicates<T extends string | number | symbol, V>(self: Array<[T,
   })
 }
 
+const $ = document.querySelector;
+const $$ = document.querySelectorAll;
+
+
 
 export default function Page() {
   const [isVisable, setUI] = useState(true);
   const [clicker, setClicker] = useState<Timer | false>(false);
   const [autoBuy, setAutoBuy] = useState<Timer | false>(false);
+  const [autoClaimCookie, setAutoClaimCookie] = useState<Timer | false>(false);
   const [giveAchivement, setGiveAchivement] = useState("");
-  const [specialCookie, setSpecialCookie] = useState("");
+  const [specialCookie, setSpecialCookie] = useState("golden");
 
 
   return (
@@ -202,7 +206,7 @@ export default function Page() {
                 setSpecialCookie(e.target.value)
               }} className="max-w-48 rounded-none bg-dim hover:bg-primary">
                 {recordToTupleArray(Game.shimmerTypes).map(([key, value]) => {
-                  return <option value={key} key={key} className="max-w-48 overflow-scroll bg-dim hover:bg-primary" ><span className="text-[16px]">{key}</span></option>
+                  return <option value={key} key={key} className="max-w-48 overflow-scroll bg-dim hover:bg-primary" >{key}</option>
                 })}
               </select>
               <label htmlFor="cookieSpawn">
@@ -218,6 +222,48 @@ export default function Page() {
               </label>
             </div>
 
+            <div className="flex flex-row gap-2">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="hidden"
+                  checked={autoClaimCookie ? true : false}
+                  onChange={() => {
+                    if (typeof autoClaimCookie == "number") {
+                      clearInterval(autoClaimCookie)
+                      setAutoBuy(false)
+                    } else {
+                      const timer = setInterval(() => {
+                        const goldenCookie: HTMLDivElement | null = document.querySelector("div.shimmer[alt='Golden cookie']");
+
+                        goldenCookie?.click();
+                      }, 1000)
+                      setAutoClaimCookie(timer)
+                    }
+                  }}
+                />
+                <div
+                  className={`w-4 h-4 border-2 border-gray-300 rounded-sm flex items-center justify-center
+          ${typeof autoClaimCookie === "number" ? "bg-primary text-white" : "bg-primary"}
+          hover:bg-light transition-colors duration-200`}
+                >
+                  {typeof autoClaimCookie === "number" && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      className="w-3 h-3"
+                      scale={4}
+                    >
+                      <path d="M5 12l5 5L20 7" strokeWidth="4" />
+                    </svg>
+                  )}
+                </div>
+              </label>
+              <span>Auto Claim Golden Cookies</span>
+            </div>
+
             <button className="bg-primary hover:bg-light transition-colors duration-200 text-white px-1 py-0.5 rounded-none" onClick={() => {
               if (clicker) clearInterval(clicker);
               if (autoBuy) clearInterval(autoBuy);
@@ -226,7 +272,6 @@ export default function Page() {
               document.querySelector("#root")?.remove();
               const script = document.createElement("script");
               script.src = `./index.js?${Math.random()}`;
-              script.type = "module";
               script.id = "self.script";
               document.body.appendChild(script);
             }}>Reload Cheat</button>

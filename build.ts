@@ -1,11 +1,10 @@
 import autoprefixer from "autoprefixer";
 import postcss from "postcss";
 import * as fs from "fs";
-import { build } from "bun";
-import { BunPlugin, type OnLoadResult } from "bun";
+import { build, Plugin } from "esbuild";
 import tailwind from "tailwindcss"
 
-let postCssPlugin: BunPlugin = {
+let postCssPlugin: Plugin = {
     name: "PostCss",
     setup: async function (build) {
         // @ts-expect-error it works :shrug:
@@ -28,9 +27,12 @@ fs.rmdirSync("dist", { recursive: true });
 fs.mkdirSync("dist")
 
 build({
-    entrypoints: ["src/index.ts"],
+    entryPoints: ["src/index.ts"],
+    format: "cjs",
+    bundle: true,
     minify: true,
+    legalComments: "none",
     outdir: "dist",
-    plugins: [postCssPlugin]
+    plugins: [postCssPlugin],
 })
 
