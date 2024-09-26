@@ -267,11 +267,12 @@ export default function Page() {
             <button className="bg-primary hover:bg-light transition-colors duration-200 text-white px-1 py-0.5 rounded-none" onClick={() => {
               if (clicker) clearInterval(clicker);
               if (autoBuy) clearInterval(autoBuy);
-              document.querySelectorAll("#self\\.script")?.forEach((element) => element.remove());
-              document.querySelectorAll("#self\\.styles")?.forEach((element) => element.remove());
+              let scriptSrc: string = "./index.js";
+              document.querySelectorAll("#self\\.script").forEach((element) => {scriptSrc=element.src.split("?")[0];element.remove()});
+              document.querySelectorAll("#self\\.styles").forEach((element) => element.remove());
               document.querySelector("#root")?.remove();
               const script = document.createElement("script");
-              script.src = `./index.js?${Math.random()}`;
+              script.src = `${scriptSrc}?${Math.random()}`;
               script.id = "self.script";
               document.body.appendChild(script);
             }}>Reload Cheat</button>
