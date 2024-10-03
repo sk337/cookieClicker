@@ -268,8 +268,8 @@ export default function Page() {
               if (clicker) clearInterval(clicker);
               if (autoBuy) clearInterval(autoBuy);
               let scriptSrc: string = "./index.js";
-              document.querySelectorAll("#self\\.script").forEach((element) => {scriptSrc=element.src.split("?")[0];element.remove()});
-              document.querySelectorAll("#self\\.styles").forEach((element) => element.remove());
+              document.querySelectorAll<HTMLScriptElement>("#self\\.script").forEach((element) => {scriptSrc=element.src.split("?")[0];element.remove()});
+              document.querySelectorAll<HTMLStyleElement>("#self\\.styles").forEach((element) => element.remove());
               document.querySelector("#root")?.remove();
               const script = document.createElement("script");
               script.src = `${scriptSrc}?${Math.random()}`;
