@@ -31,7 +31,7 @@ build({
     format: "cjs",
     bundle: true,
     minify: true,
-    legalComments: "none",
+    legalComments: "inline",
     outdir: "dist",
     plugins: [postCssPlugin],
 })
